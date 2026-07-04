@@ -7,6 +7,8 @@ import EmptyState from '../components/EmptyState'
 import ErrorState from '../components/ErrorState'
 import LoadingSkeleton from '../components/LoadingSkeleton'
 
+const PAGE_SIZE = 20
+
 export default function All() {
   const [data, setData] = useState<FeedData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -14,6 +16,7 @@ export default function All() {
   const [domains, setDomains] = useState<Domain[]>([])
   const [types, setTypes] = useState<ItemType[]>([])
   const [search, setSearch] = useState('')
+  const [page, setPage] = useState(1)
 
   const load = async () => {
     setLoading(true)
@@ -44,8 +47,17 @@ export default function All() {
     })
   }, [data, domains, types, search])
 
-  const toggleDomain = (d: Domain) => setDomains(prev => prev.includes(d) ? prev.filter(x => x !== d) : [...prev, d])
-  const toggleType = (t: ItemType) => setTypes(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t])
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE)
+  const paginatedItems = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+
+  const toggleDomain = (d: Domain) => {
+    setDomains(prev => prev.includes(d) ? prev.filter(x => x !== d) : [...prev, d])
+    setPage(1)
+  }
+  const toggleType = (t: ItemType) => {
+    setTypes(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t])
+    setPage(1)
+  }
 
   if (loading) return <LoadingSkeleton />
   if (error) return <ErrorState message={error} onRetry={load} />
@@ -64,7 +76,7 @@ export default function All() {
         <input
           type="text"
           value={search}
-          onChange={e => setSearch(e.target.value)}
+          onChange={e => { setSearch(e.target.value); setPage(1) }}
           placeholder="搜索标题或摘要..."
           className="w-full px-4 py-2.5 bg-gray-900 border border-gray-700/50 rounded-lg text-gray-200 placeholder-gray-600 focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/30"
         />
@@ -81,9 +93,31 @@ export default function All() {
         {filtered.length === 0 ? (
           <EmptyState message="没有匹配的条目" />
         ) : (
-          filtered.map(item => <ItemCard key={item.id} item={item} />)
+          paginatedItems.map(item => <ItemCard key={item.id} item={item} />)
         )}
       </div>
+
+      {totalPages > 1 && (
+        <div className="mt-8 flex items-center justify-center gap-2">
+          <button
+            onClick={() => setPage(p => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className="px-3 py-2 rounded-lg text-sm bg-gray-800 text-gray-300 hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            上一页
+          </button>
+          <span className="text-sm text-gray-500 px-4">
+            {page} / {totalPages}
+          </span>
+          <button
+            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+            className="px-3 py-2 rounded-lg text-sm bg-gray-800 text-gray-300 hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            下一页
+          </button>
+        </div>
+      )}
     </div>
   )
 }

@@ -8,6 +8,8 @@ import ErrorState from '../components/ErrorState'
 import LoadingSkeleton from '../components/LoadingSkeleton'
 import SourceHealthFooter from '../components/SourceHealthFooter'
 
+const PAGE_SIZE = 20
+
 export default function Home() {
   const [data, setData] = useState<FeedData | null>(null)
   const [loading, setLoading] = useState(true)
@@ -15,6 +17,7 @@ export default function Home() {
   const [domains, setDomains] = useState<Domain[]>([])
   const [types, setTypes] = useState<ItemType[]>([])
   const [health, setHealth] = useState<any[]>([])
+  const [page, setPage] = useState(1)
 
   const load = async () => {
     setLoading(true)
@@ -41,8 +44,17 @@ export default function Home() {
     })
   }, [data, domains, types])
 
-  const toggleDomain = (d: Domain) => setDomains(prev => prev.includes(d) ? prev.filter(x => x !== d) : [...prev, d])
-  const toggleType = (t: ItemType) => setTypes(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t])
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE)
+  const paginatedItems = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
+
+  const toggleDomain = (d: Domain) => {
+    setDomains(prev => prev.includes(d) ? prev.filter(x => x !== d) : [...prev, d])
+    setPage(1)
+  }
+  const toggleType = (t: ItemType) => {
+    setTypes(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t])
+    setPage(1)
+  }
 
   if (loading) return <LoadingSkeleton />
   if (error) return <ErrorState message={error} onRetry={load} />
@@ -66,11 +78,33 @@ export default function Home() {
 
       <div className="mt-6 space-y-4">
         {filtered.length === 0 ? (
-          <EmptyState message="今日暂无 ≥60 分的条目，换个筛选试试" />
+          <EmptyState message="今日暂无条目，换个筛选试试" />
         ) : (
-          filtered.map(item => <ItemCard key={item.id} item={item} />)
+          paginatedItems.map(item => <ItemCard key={item.id} item={item} />)
         )}
       </div>
+
+      {totalPages > 1 && (
+        <div className="mt-8 flex items-center justify-center gap-2">
+          <button
+            onClick={() => setPage(p => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className="px-3 py-2 rounded-lg text-sm bg-gray-800 text-gray-300 hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            上一页
+          </button>
+          <span className="text-sm text-gray-500 px-4">
+            {page} / {totalPages}
+          </span>
+          <button
+            onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+            className="px-3 py-2 rounded-lg text-sm bg-gray-800 text-gray-300 hover:bg-gray-700 disabled:opacity-30 disabled:cursor-not-allowed"
+          >
+            下一页
+          </button>
+        </div>
+      )}
 
       <SourceHealthFooter health={health} />
     </div>
