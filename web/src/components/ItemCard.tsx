@@ -4,6 +4,7 @@ import { TYPE_LABELS } from '../types'
 import ScoreBadge from './ScoreBadge'
 import DomainTag from './DomainTag'
 import BookmarkButton from './BookmarkButton'
+import ShareButton from './ShareButton'
 import { relativeTime } from '../lib/data'
 import { markAsRead, isRead } from '../lib/reading'
 
@@ -12,29 +13,11 @@ interface ItemCardProps {
 }
 
 const ItemCard = memo(function ItemCard({ item }: ItemCardProps) {
-  const [copied, setCopied] = useState(false)
   const [read, setRead] = useState(() => isRead(item.id))
 
   const handleClick = () => {
     markAsRead(item.id)
     setRead(true)
-  }
-
-  const copyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(item.url)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    } catch {
-      const textArea = document.createElement('textarea')
-      textArea.value = item.url
-      document.body.appendChild(textArea)
-      textArea.select()
-      document.execCommand('copy')
-      document.body.removeChild(textArea)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    }
   }
 
   return (
@@ -70,13 +53,7 @@ const ItemCard = memo(function ItemCard({ item }: ItemCardProps) {
             </span>
             <div className="flex items-center gap-2 ml-auto">
               <BookmarkButton itemId={item.id} />
-              <button
-                onClick={copyLink}
-                className="text-xs text-gray-600 hover:text-primary-400 transition-colors"
-                title="复制链接"
-              >
-                {copied ? '✓ 已复制' : '🔗 复制'}
-              </button>
+              <ShareButton title={item.title_zh} url={item.url} />
             </div>
           </div>
           {item.reason && (

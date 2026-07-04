@@ -1,12 +1,14 @@
 import { Routes, Route, NavLink, useNavigate } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Home from './pages/Home'
 import All from './pages/All'
 import Health from './pages/Health'
 import Bookmarks from './pages/Bookmarks'
 import Analytics from './pages/Analytics'
+import About from './pages/About'
 import ScrollToTop from './components/ScrollToTop'
 import ThemeToggle from './components/ThemeToggle'
+import KeyboardHelp from './components/KeyboardHelp'
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   `px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
@@ -17,6 +19,7 @@ const navLinkClass = ({ isActive }: { isActive: boolean }) =>
 
 export default function App() {
   const navigate = useNavigate()
+  const [showKeyboardHelp, setShowKeyboardHelp] = useState(false)
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -39,6 +42,15 @@ export default function App() {
         case '5':
           navigate('/health')
           break
+        case '6':
+          navigate('/about')
+          break
+        case '?':
+          setShowKeyboardHelp(true)
+          break
+        case 'Escape':
+          setShowKeyboardHelp(false)
+          break
       }
     }
 
@@ -60,7 +72,17 @@ export default function App() {
               <NavLink to="/bookmarks" className={navLinkClass}>收藏</NavLink>
               <NavLink to="/analytics" className={navLinkClass}>分析</NavLink>
               <NavLink to="/health" className={navLinkClass}>健康</NavLink>
+              <NavLink to="/about" className={navLinkClass}>关于</NavLink>
             </nav>
+            <button
+              onClick={() => setShowKeyboardHelp(true)}
+              className="p-2 rounded-lg text-gray-400 hover:text-gray-200 hover:bg-gray-800/50 transition-colors"
+              title="键盘快捷键"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            </button>
             <ThemeToggle />
           </div>
         </div>
@@ -72,9 +94,11 @@ export default function App() {
           <Route path="/bookmarks" element={<Bookmarks />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/health" element={<Health />} />
+          <Route path="/about" element={<About />} />
         </Routes>
       </main>
       <ScrollToTop />
+      <KeyboardHelp isOpen={showKeyboardHelp} onClose={() => setShowKeyboardHelp(false)} />
     </div>
   )
 }
