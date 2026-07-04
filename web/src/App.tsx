@@ -13,9 +13,10 @@ import Settings from './pages/Settings'
 import ScrollToTop from './components/ScrollToTop'
 import ThemeToggle from './components/ThemeToggle'
 import KeyboardHelp from './components/KeyboardHelp'
+import MobileNav from './components/MobileNav'
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-  `px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+  `px-4 py-2 rounded-lg text-sm font-medium transition-colors hidden md:block ${
     isActive
       ? 'bg-primary-500/20 text-primary-300'
       : 'text-gray-400 hover:text-gray-200 hover:bg-gray-800/50'
@@ -92,7 +93,7 @@ export default function App() {
             </nav>
             <button
               onClick={() => setShowKeyboardHelp(true)}
-              className="p-2 rounded-lg text-gray-400 hover:text-gray-200 hover:bg-gray-800/50 transition-colors"
+              className="p-2 rounded-lg text-gray-400 hover:text-gray-200 hover:bg-gray-800/50 transition-colors hidden md:block"
               title="键盘快捷键"
             >
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -100,6 +101,7 @@ export default function App() {
               </svg>
             </button>
             <ThemeToggle />
+            <MobileNav />
           </div>
         </div>
       </header>
