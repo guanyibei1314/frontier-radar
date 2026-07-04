@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import type { Domain, ItemType, FeedData } from '../types'
-import { fetchFeed, fetchMeta } from '../lib/data'
+import { fetchFeed, fetchMeta, exportAsCSV, exportAsJSON } from '../lib/data'
 import FilterBar from '../components/FilterBar'
 import ItemCard from '../components/ItemCard'
 import EmptyState from '../components/EmptyState'
@@ -19,6 +19,7 @@ export default function Home() {
   const [minScore, setMinScore] = useState(0)
   const [health, setHealth] = useState<any[]>([])
   const [page, setPage] = useState(1)
+  const [showExport, setShowExport] = useState(false)
 
   const load = async () => {
     setLoading(true)
@@ -58,17 +59,53 @@ export default function Home() {
     setPage(1)
   }
 
+  const handleExportCSV = () => {
+    exportAsCSV(filtered, `frontier-radar-feed-${new Date().toISOString().slice(0, 10)}.csv`)
+    setShowExport(false)
+  }
+
+  const handleExportJSON = () => {
+    exportAsJSON(filtered, `frontier-radar-feed-${new Date().toISOString().slice(0, 10)}.json`)
+    setShowExport(false)
+  }
+
   if (loading) return <LoadingSkeleton />
   if (error) return <ErrorState message={error} onRetry={load} />
 
   return (
     <div>
-      <div className="mb-6">
-        <h2 className="text-xl font-bold text-gray-100 mb-1">精选 Feed</h2>
-        <p className="text-sm text-gray-500">
-          {data?.generated_at && `更新于 ${new Date(data.generated_at).toLocaleString('zh-CN')}`}
-          {' · '}{filtered.length} 条
-        </p>
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h2 className="text-xl font-bold text-gray-100 mb-1">精选 Feed</h2>
+          <p className="text-sm text-gray-500">
+            {data?.generated_at && `更新于 ${new Date(data.generated_at).toLocaleString('zh-CN')}`}
+            {' · '}{filtered.length} 条
+          </p>
+        </div>
+        <div className="relative">
+          <button
+            onClick={() => setShowExport(!showExport)}
+            className="px-3 py-2 rounded-lg text-sm bg-gray-800 text-gray-300 hover:bg-gray-700 transition-colors"
+          >
+            📥 导出
+          </button>
+          {showExport && (
+            <div className="absolute right-0 mt-2 w-48 bg-gray-900 border border-gray-700 rounded-lg shadow-lg z-10">
+              <button
+                onClick={handleExportCSV}
+                className="w-full px-4 py-2 text-left text-sm text-gray-300 hover:bg-gray-800 rounded-t-lg"
+              >
+                导出为 CSV
+              </button>
+              <button
+                onClick={handleExportJSON}
+                className="w-full px-4 py-2 text-left text-sm text-gray-300 hover:bg-gray-800 rounded-b-lg"
+              >
+                导出为 JSON
+              </button>
+            </div>
+          )}
+        </div>
       </div>
 
       <FilterBar

@@ -5,6 +5,7 @@ import ScoreBadge from './ScoreBadge'
 import DomainTag from './DomainTag'
 import BookmarkButton from './BookmarkButton'
 import { relativeTime } from '../lib/data'
+import { markAsRead, isRead } from '../lib/reading'
 
 interface ItemCardProps {
   item: Item
@@ -12,6 +13,12 @@ interface ItemCardProps {
 
 const ItemCard = memo(function ItemCard({ item }: ItemCardProps) {
   const [copied, setCopied] = useState(false)
+  const [read, setRead] = useState(() => isRead(item.id))
+
+  const handleClick = () => {
+    markAsRead(item.id)
+    setRead(true)
+  }
 
   const copyLink = async () => {
     try {
@@ -31,14 +38,19 @@ const ItemCard = memo(function ItemCard({ item }: ItemCardProps) {
   }
 
   return (
-    <article className="card group">
+    <article className={`card group ${read ? 'opacity-70' : ''}`}>
       <div className="flex gap-4">
         <div className="flex-shrink-0 pt-1">
           <ScoreBadge score={item.score} />
         </div>
         <div className="flex-1 min-w-0">
           <h3 className="text-base font-semibold text-gray-100 group-hover:text-primary-300 transition-colors leading-snug">
-            <a href={item.url} target="_blank" rel="noopener noreferrer">
+            <a
+              href={item.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={handleClick}
+            >
               {item.title_zh}
             </a>
           </h3>
