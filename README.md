@@ -2,59 +2,205 @@
 
 从 AI / 具身智能 / 无人机三大领域，筛出值得你看的前沿动态。
 
-## 快速开始
+## 🚀 快速开始
 
-### 1. 运行流水线（本地测试）
+### 在线访问
+
+**https://web-red-one-81.vercel.app**
+
+### 本地开发
 
 ```bash
+# 1. 克隆仓库
+git clone https://github.com/zhangshujuan1314/frontier-radar.git
+cd frontier-radar
+
+# 2. 运行流水线
 cd pipeline
 pip install -r requirements.txt
 python main.py
-```
 
-设置 `DEEPSEEK_API_KEY` 环境变量启用 LLM 翻译/评分。
-
-### 2. 构建前端
-
-```bash
-cd web
+# 3. 启动前端
+cd ../web
 npm install
-npm run build
+npm run dev
 ```
 
-### 3. 部署到 Cloudflare Pages
+## ✨ 核心功能
 
-1. 推送到 GitHub
-2. 在 CF Pages 连接仓库
-3. 构建命令: `cd web && npm install && npm run build`
-4. 输出目录: `web/dist`
-5. 添加 `DEEPSEEK_API_KEY` 到 GitHub Actions Secrets
+### 智能内容处理
 
-## 架构
+- **自动抓取**：每 3 小时从 8 个信源自动抓取
+- **智能翻译**：使用 DeepSeek 大模型翻译标题和摘要
+- **五维评分**：相关性、重要性、新颖度、权威度、时效性
+- **自动分类**：AI / 具身智能 / 无人机领域识别
+- **去重聚簇**：同一事件多源报道自动合并
 
-```
-sources.yaml → Pipeline (Python) → data/*.json → Frontend (React) → CF Pages
-```
+### 前端功能
 
-- **Pipeline**: 每 3h 由 GitHub Actions 触发
-- **数据**: JSON 滚动窗口，版本化在仓库内
-- **前端**: 纯静态，零后端，直读 JSON
+| 功能 | 说明 |
+|------|------|
+| 📊 数据分析 | 分数、领域、类型、信源分布图表 |
+| 📰 每日精选 | 按今天/昨天/本周筛选，分领域 Top 5 |
+| 🔥 热门趋势 | 基于浏览记录的热门内容 |
+| ⭐ 收藏夹 | 收藏条目，独立页面查看 |
+| 🔍 全文搜索 | 搜索标题和摘要 |
+| 🏷️ 多维筛选 | 领域、类型、分数筛选 |
+| 📤 导出功能 | 导出 CSV/JSON 格式 |
+| 📥 导入功能 | 导入备份数据 |
+| 🔔 通知系统 | 浏览器通知高分条目 |
+| 🌙 主题切换 | 暗色/亮色模式 |
+| ⌨️ 键盘快捷键 | 数字键快速切换页面 |
+| 📱 移动端适配 | 响应式设计 |
+| 💾 离线支持 | PWA + Service Worker |
+| 📈 性能监控 | 页面加载时间追踪 |
+| 🐛 错误追踪 | 全局错误捕获 |
+| 📖 阅读进度 | 已读条目标记 |
+| 🔍 搜索历史 | 保存搜索记录 |
+| ⚙️ 个性化设置 | 主题、筛选、分页等配置 |
 
-## 信源
+## 📄 页面结构
 
-| 领域 | 源 |
-|------|-----|
-| AI | arXiv cs.AI/CL/LG, Hacker News |
-| 具身智能 | arXiv cs.RO, IEEE Spectrum Robotics |
-| 无人机 | DroneDJ, sUAS News |
+| 页面 | 路径 | 功能 |
+|------|------|------|
+| 精选 | `/` | 高质量条目，分页、筛选、导出 |
+| 全部 | `/all` | 所有条目，搜索、筛选 |
+| 收藏 | `/bookmarks` | 收藏的条目 |
+| 分析 | `/analytics` | 数据可视化图表 |
+| 日报 | `/digest` | 每日精选，按领域分组 |
+| 热门 | `/trending` | 基于浏览记录的热门内容 |
+| 详情 | `/item/:id` | 条目详情页 |
+| 健康 | `/health` | 流水线状态 |
+| 关于 | `/about` | 项目介绍 |
+| 设置 | `/settings` | 个性化配置 |
+| 性能 | `/performance` | 性能监控 |
 
-## 文件结构
+## ⌨️ 键盘快捷键
+
+| 快捷键 | 功能 |
+|--------|------|
+| `1` | 精选 Feed |
+| `2` | 全部动态 |
+| `3` | 收藏夹 |
+| `4` | 数据分析 |
+| `5` | 每日精选 |
+| `6` | 热门趋势 |
+| `7` | 健康状态 |
+| `8` | 关于页面 |
+| `9` | 设置页面 |
+| `0` | 性能监控 |
+| `?` | 显示快捷键帮助 |
+| `Esc` | 关闭弹窗 |
+
+## 📡 信源列表
+
+### AI
+- arXiv cs.AI
+- arXiv cs.CL
+- arXiv cs.LG
+- Hacker News
+
+### 具身智能
+- arXiv cs.RO
+- IEEE Spectrum Robotics
+
+### 无人机
+- DroneDJ
+- sUAS News
+
+## 🏗️ 技术栈
+
+### 后端
+- Python 3.11
+- feedparser / httpx
+- DeepSeek API
+- GitHub Actions
+
+### 前端
+- React 18 + TypeScript
+- TailwindCSS
+- Vite
+- Vercel
+
+## 📦 项目结构
 
 ```
 frontier-radar/
-├─ pipeline/          # 入库流水线
-├─ data/              # 流水线产物
-├─ web/               # 前端
-├─ sources.yaml       # 信源注册表
-└─ .github/workflows/ # CI/CD
+├─ pipeline/              # 入库流水线
+│  ├─ fetchers/           # 信源抓取器
+│  ├─ pipeline/           # 处理模块
+│  ├─ cache/              # LLM 缓存
+│  └─ main.py             # 编排入口
+├─ data/                  # 流水线产物
+│  ├─ feed.json           # 精选条目
+│  ├─ all.json            # 全部条目
+│  └─ meta.json           # 元数据
+├─ web/                   # 前端
+│  ├─ src/
+│  │  ├─ components/      # 组件
+│  │  ├─ pages/           # 页面
+│  │  └─ lib/             # 工具库
+│  └─ public/             # 静态资源
+├─ sources.yaml           # 信源注册表
+└─ .github/workflows/     # CI/CD
 ```
+
+## 🚀 部署
+
+### GitHub Actions
+
+每 3 小时自动运行流水线，更新数据并部署。
+
+### Vercel
+
+自动从 GitHub 部署，每次 push 触发构建。
+
+### Cloudflare Pages（备选）
+
+构建命令：`cd web && npm ci && cp -r ../data public/data && npm run build`
+
+输出目录：`web/dist`
+
+## 📊 数据统计
+
+- **精选条目**：184+ 条
+- **全部条目**：216+ 条
+- **AI 领域**：135+ 条
+- **具身智能**：43+ 条
+- **无人机**：36+ 条
+- **翻译质量**：100% 中文
+- **更新频率**：每 3 小时
+
+## 🔧 配置
+
+### 环境变量
+
+| 变量 | 说明 |
+|------|------|
+| `DEEPSEEK_API_KEY` | DeepSeek API 密钥 |
+
+### GitHub Secrets
+
+在仓库 Settings → Secrets → Actions 中添加：
+
+- `DEEPSEEK_API_KEY`：你的 DeepSeek API 密钥
+
+## 📈 性能
+
+- **首次加载**：< 2s
+- **数据缓存**：5 分钟有效期
+- **离线支持**：PWA + Service Worker
+- **Bundle 大小**：~226 KB (gzipped: ~70 KB)
+
+## 🤝 贡献
+
+欢迎提交 Issue 和 Pull Request！
+
+## 📄 许可证
+
+MIT License
+
+## 🔗 链接
+
+- **GitHub**：https://github.com/zhangshujuan1314/frontier-radar
+- **Vercel**：https://web-red-one-81.vercel.app
