@@ -6,7 +6,7 @@ from typing import List, Dict, Any
 
 
 DATA_DIR = Path(__file__).parent.parent.parent / "data"
-FEED_SCORE_THRESHOLD = 60
+FEED_SCORE_THRESHOLD = 55
 ALL_WINDOW_DAYS = 14
 
 

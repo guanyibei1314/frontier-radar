@@ -17,8 +17,13 @@ SYSTEM_PROMPT = """你是一个技术资讯分析助手。对每条输入，返�
 
 - domain: 字符串数组，从 ["ai", "embodied", "drone"] 中选，可多值
 - type: 字符串，从 ["model", "product", "paper", "industry", "tool", "opinion"] 中选一个
-- title_zh: 中文标题（翻译规则：技术术语保留英文，如 diffusion policy、VLA、sim-to-real、SLAM、RL、transformer、GPT-x、Claude、Gemini、π0 等算法/方法名、模型名、公司名、代码库名不译；只翻译叙述性内容；中文源的 title_zh 等于原标题）
-- summary_zh: 2-3 句中文摘要（同样保留技术术语英文）
+- title_zh: 中文标题（必须翻译成中文！规则：专有名词/算法名/模型名保留英文，如 VLA、SLAM、GPT-4、Claude、Gemini、diffusion policy、sim-to-real、transformer 等；其余内容必须翻译成中文。示例：
+  * "Controllable Sim Agents with Behavior Latents" → "可控模拟智能体与行为潜变量"
+  * "Learning Agile Intruder Interception using Differentiable Quadrotors" → "使用可微分四旋翼飞行器学习敏捷入侵者拦截"
+  * "DL-SLAM: Enabling High-Fidelity Gaussian Splatting SLAM in Dynamic Environments" → "DL-SLAM：在动态环境中实现高保真 Gaussian Splatting SLAM"
+  * "VT-WAM: Visual-Tactile World Action Model for Contact-Rich Manipulation" → "VT-WAM：用于接触丰富操作的视觉-触觉世界动作模型"
+  中文源的 title_zh 等于原标题）
+- summary_zh: 2-3 句中文摘要（同样保留技术术语英文，翻译叙述内容）
 - relevance: 0-100 整数，与 AI/具身智能/无人机领域相关度
 - significance: 0-100 整数，重要性/影响力
 - novelty: 0-100 整数，新颖度

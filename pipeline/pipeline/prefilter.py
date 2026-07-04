@@ -41,7 +41,7 @@ def has_domain_keyword(title: str, summary: str) -> bool:
     return bool(_KEYWORD_PATTERN.search(text))
 
 
-def prefilter(items: List[Dict[str, Any]], max_age_days: int = 14) -> List[Dict[str, Any]]:
+def prefilter(items: List[Dict[str, Any]], max_age_days: int = 7) -> List[Dict[str, Any]]:
     """Filter items: keep only those within time window and with domain relevance."""
     now = datetime.now(timezone.utc)
     cutoff = now - timedelta(days=max_age_days)
