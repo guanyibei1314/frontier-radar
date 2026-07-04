@@ -6,6 +6,7 @@ import Health from './pages/Health'
 import Bookmarks from './pages/Bookmarks'
 import Analytics from './pages/Analytics'
 import About from './pages/About'
+import Settings from './pages/Settings'
 import ScrollToTop from './components/ScrollToTop'
 import ThemeToggle from './components/ThemeToggle'
 import KeyboardHelp from './components/KeyboardHelp'
@@ -45,6 +46,9 @@ export default function App() {
         case '6':
           navigate('/about')
           break
+        case '7':
+          navigate('/settings')
+          break
         case '?':
           setShowKeyboardHelp(true)
           break
@@ -73,6 +77,7 @@ export default function App() {
               <NavLink to="/analytics" className={navLinkClass}>分析</NavLink>
               <NavLink to="/health" className={navLinkClass}>健康</NavLink>
               <NavLink to="/about" className={navLinkClass}>关于</NavLink>
+              <NavLink to="/settings" className={navLinkClass}>设置</NavLink>
             </nav>
             <button
               onClick={() => setShowKeyboardHelp(true)}
@@ -95,6 +100,7 @@ export default function App() {
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/health" element={<Health />} />
           <Route path="/about" element={<About />} />
+          <Route path="/settings" element={<Settings />} />
         </Routes>
       </main>
       <ScrollToTop />
