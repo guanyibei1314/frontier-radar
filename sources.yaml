@@ -1,0 +1,60 @@
+# 信源注册表 — 加删源改这里，不改代码
+# domain: 该源默认领域（LLM 仍可细分/多标）
+# authority: 1-5 信源权威度
+# kind: arxiv | rss | reddit | hackernews | rsshub | scrape
+
+- name: "arXiv cs.RO"
+  domain: ["embodied"]
+  authority: 5
+  kind: "arxiv"
+  query: "cat:cs.RO"
+  enabled: true
+
+- name: "arXiv cs.AI"
+  domain: ["ai"]
+  authority: 4
+  kind: "arxiv"
+  query: "cat:cs.AI"
+  enabled: true
+
+- name: "arXiv cs.CL"
+  domain: ["ai"]
+  authority: 4
+  kind: "arxiv"
+  query: "cat:cs.CL"
+  enabled: true
+
+- name: "arXiv cs.LG"
+  domain: ["ai"]
+  authority: 4
+  kind: "arxiv"
+  query: "cat:cs.LG"
+  enabled: true
+
+- name: "Hacker News"
+  domain: ["ai"]
+  authority: 3
+  kind: "hackernews"
+  query: "artificial+intelligence+OR+LLM+OR+GPT+OR+robot+OR+drone"
+  enabled: true
+
+- name: "IEEE Spectrum Robotics"
+  domain: ["embodied"]
+  authority: 4
+  kind: "rss"
+  url: "https://spectrum.ieee.org/feeds/topic/robotics.rss"
+  enabled: true
+
+- name: "DroneDJ"
+  domain: ["drone"]
+  authority: 3
+  kind: "rss"
+  url: "https://dronedj.com/feed/"
+  enabled: true
+
+- name: "sUAS News"
+  domain: ["drone"]
+  authority: 3
+  kind: "rss"
+  url: "https://www.suasnews.com/feed/"
+  enabled: true

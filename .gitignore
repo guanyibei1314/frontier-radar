@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node
+node_modules/
+web/dist/
+
+# IDE
+.vscode/
+.idea/
+
+# Cache (rebuilt by pipeline)
+pipeline/cache/*.json
+
+# Build artifacts
+web/public/data/
+
+# OS
+.DS_Store
+Thumbs.db
