@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import type { Domain, ItemType } from '../types'
 import { DOMAIN_LABELS, TYPE_LABELS } from '../types'
 import { getPreferences, savePreferences, resetPreferences } from '../lib/preferences'
@@ -9,12 +9,15 @@ import { clearSearchHistory } from '../lib/search'
 import { clearErrors } from '../lib/errors'
 import { clearMetrics } from '../lib/performance'
 import { getNotificationConfig, saveNotificationConfig, resetNotificationConfig, requestNotificationPermission } from '../lib/notifications'
+import { downloadExport, importData } from '../lib/export'
 
 export default function Settings() {
   const [prefs, setPrefs] = useState(getPreferences())
   const [notifConfig, setNotifConfig] = useState(getNotificationConfig())
   const [saved, setSaved] = useState(false)
   const [notifPermission, setNotifPermission] = useState<string>('default')
+  const [importStatus, setImportStatus] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     setPrefs(getPreferences())
@@ -73,6 +76,34 @@ export default function Settings() {
   const handleRequestPermission = async () => {
     const granted = await requestNotificationPermission()
     setNotifPermission(granted ? 'granted' : 'denied')
+  }
+
+  const handleExport = () => {
+    downloadExport()
+  }
+
+  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setImportStatus('导入中...')
+    const success = await importData(file)
+
+    if (success) {
+      setImportStatus('导入成功！')
+      // Reload preferences
+      setPrefs(getPreferences())
+      setNotifConfig(getNotificationConfig())
+    } else {
+      setImportStatus('导入失败，请检查文件格式')
+    }
+
+    // Clear file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+
+    setTimeout(() => setImportStatus(null), 3000)
   }
 
   const allDomains: Domain[] = ['ai', 'embodied', 'drone']
@@ -259,6 +290,48 @@ export default function Settings() {
                 <span className="text-gray-300 w-12">{notifConfig.highScoreThreshold}</span>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Export/Import */}
+        <div className="card">
+          <h3 className="text-lg font-semibold text-gray-200 mb-4">数据导出/导入</h3>
+          <div className="space-y-4">
+            <div className="flex flex-wrap gap-4">
+              <button
+                onClick={handleExport}
+                className="px-4 py-2 rounded-lg text-sm bg-primary-600 text-white hover:bg-primary-700 transition-colors"
+              >
+                导出数据
+              </button>
+              <div>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleImport}
+                  accept=".json"
+                  className="hidden"
+                  id="import-file"
+                />
+                <label
+                  htmlFor="import-file"
+                  className="px-4 py-2 rounded-lg text-sm bg-gray-800 text-gray-300 hover:bg-gray-700 transition-colors cursor-pointer inline-block"
+                >
+                  导入数据
+                </label>
+              </div>
+            </div>
+            {importStatus && (
+              <p className={`text-sm ${
+                importStatus.includes('成功') ? 'text-emerald-400' :
+                importStatus.includes('失败') ? 'text-red-400' : 'text-gray-400'
+              }`}>
+                {importStatus}
+              </p>
+            )}
+            <p className="text-xs text-gray-500">
+              导出数据包含：偏好设置、阅读历史、收藏夹、搜索历史
+            </p>
           </div>
         </div>
 
