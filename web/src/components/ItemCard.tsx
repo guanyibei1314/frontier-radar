@@ -3,6 +3,7 @@ import type { Item } from '../types'
 import { TYPE_LABELS } from '../types'
 import ScoreBadge from './ScoreBadge'
 import DomainTag from './DomainTag'
+import BookmarkButton from './BookmarkButton'
 import { relativeTime } from '../lib/data'
 
 interface ItemCardProps {
@@ -18,7 +19,6 @@ const ItemCard = memo(function ItemCard({ item }: ItemCardProps) {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch {
-      // Fallback for older browsers
       const textArea = document.createElement('textarea')
       textArea.value = item.url
       document.body.appendChild(textArea)
@@ -56,13 +56,16 @@ const ItemCard = memo(function ItemCard({ item }: ItemCardProps) {
             <span className="text-xs text-gray-600">
               {relativeTime(item.published_at)}
             </span>
-            <button
-              onClick={copyLink}
-              className="text-xs text-gray-600 hover:text-primary-400 transition-colors ml-auto"
-              title="复制链接"
-            >
-              {copied ? '✓ 已复制' : '🔗 复制'}
-            </button>
+            <div className="flex items-center gap-2 ml-auto">
+              <BookmarkButton itemId={item.id} />
+              <button
+                onClick={copyLink}
+                className="text-xs text-gray-600 hover:text-primary-400 transition-colors"
+                title="复制链接"
+              >
+                {copied ? '✓ 已复制' : '🔗 复制'}
+              </button>
+            </div>
           </div>
           {item.reason && (
             <p className="text-sm text-primary-400/80 mt-2 leading-relaxed">

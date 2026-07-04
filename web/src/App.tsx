@@ -3,6 +3,7 @@ import { useEffect } from 'react'
 import Home from './pages/Home'
 import All from './pages/All'
 import Health from './pages/Health'
+import Bookmarks from './pages/Bookmarks'
 import ScrollToTop from './components/ScrollToTop'
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
@@ -18,7 +19,6 @@ export default function App() {
   // Keyboard shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Only trigger if not in input field
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
 
       switch (e.key) {
@@ -29,13 +29,10 @@ export default function App() {
           navigate('/all')
           break
         case '3':
-          navigate('/health')
+          navigate('/bookmarks')
           break
-        case 'ArrowToTop':
-          if (e.ctrlKey || e.metaKey) {
-            e.preventDefault()
-            window.scrollTo({ top: 0, behavior: 'smooth' })
-          }
+        case '4':
+          navigate('/health')
           break
       }
     }
@@ -54,6 +51,7 @@ export default function App() {
           <nav className="flex gap-1">
             <NavLink to="/" className={navLinkClass} end>精选</NavLink>
             <NavLink to="/all" className={navLinkClass}>全部</NavLink>
+            <NavLink to="/bookmarks" className={navLinkClass}>收藏</NavLink>
             <NavLink to="/health" className={navLinkClass}>健康</NavLink>
           </nav>
         </div>
@@ -62,6 +60,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/all" element={<All />} />
+          <Route path="/bookmarks" element={<Bookmarks />} />
           <Route path="/health" element={<Health />} />
         </Routes>
       </main>
