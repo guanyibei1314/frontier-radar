@@ -1,3 +1,4 @@
+import { memo, useState } from 'react'
 import type { Item } from '../types'
 import { TYPE_LABELS } from '../types'
 import ScoreBadge from './ScoreBadge'
@@ -8,7 +9,27 @@ interface ItemCardProps {
   item: Item
 }
 
-export default function ItemCard({ item }: ItemCardProps) {
+const ItemCard = memo(function ItemCard({ item }: ItemCardProps) {
+  const [copied, setCopied] = useState(false)
+
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(item.url)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea')
+      textArea.value = item.url
+      document.body.appendChild(textArea)
+      textArea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textArea)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }
+  }
+
   return (
     <article className="card group">
       <div className="flex gap-4">
@@ -35,13 +56,20 @@ export default function ItemCard({ item }: ItemCardProps) {
             <span className="text-xs text-gray-600">
               {relativeTime(item.published_at)}
             </span>
+            <button
+              onClick={copyLink}
+              className="text-xs text-gray-600 hover:text-primary-400 transition-colors ml-auto"
+              title="复制链接"
+            >
+              {copied ? '✓ 已复制' : '🔗 复制'}
+            </button>
           </div>
           {item.reason && (
             <p className="text-sm text-primary-400/80 mt-2 leading-relaxed">
               💡 {item.reason}
             </p>
           )}
-          {item.related.length > 0 && (
+          {item.related && item.related.length > 0 && (
             <p className="text-xs text-gray-600 mt-1">
               另有 {item.related.length} 个来源报道
             </p>
@@ -50,4 +78,6 @@ export default function ItemCard({ item }: ItemCardProps) {
       </div>
     </article>
   )
-}
+})
+
+export default ItemCard

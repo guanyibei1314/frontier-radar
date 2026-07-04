@@ -6,9 +6,18 @@ interface FilterBarProps {
   selectedTypes: ItemType[]
   onDomainToggle: (d: Domain) => void
   onTypeToggle: (t: ItemType) => void
+  minScore?: number
+  onMinScoreChange?: (score: number) => void
 }
 
-export default function FilterBar({ selectedDomains, selectedTypes, onDomainToggle, onTypeToggle }: FilterBarProps) {
+export default function FilterBar({
+  selectedDomains,
+  selectedTypes,
+  onDomainToggle,
+  onTypeToggle,
+  minScore = 0,
+  onMinScoreChange
+}: FilterBarProps) {
   const allDomains: Domain[] = ['ai', 'embodied', 'drone']
   const allTypes: ItemType[] = ['model', 'product', 'paper', 'industry', 'tool', 'opinion']
 
@@ -38,6 +47,20 @@ export default function FilterBar({ selectedDomains, selectedTypes, onDomainTogg
           </button>
         ))}
       </div>
+      {onMinScoreChange && (
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-gray-500">最低分数</span>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={minScore}
+            onChange={e => onMinScoreChange(Number(e.target.value))}
+            className="w-32 h-2 bg-gray-800 rounded-lg appearance-none cursor-pointer"
+          />
+          <span className="text-xs text-gray-400 w-8">{minScore}</span>
+        </div>
+      )}
     </div>
   )
 }

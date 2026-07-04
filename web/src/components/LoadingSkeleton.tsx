@@ -18,6 +18,9 @@ export default function LoadingSkeleton() {
           </div>
         </div>
       ))}
+      <div className="text-center text-gray-600 text-sm py-4">
+        加载中...
+      </div>
     </div>
   )
 }

@@ -1,7 +1,9 @@
-import { Routes, Route, NavLink } from 'react-router-dom'
+import { Routes, Route, NavLink, useNavigate } from 'react-router-dom'
+import { useEffect } from 'react'
 import Home from './pages/Home'
 import All from './pages/All'
 import Health from './pages/Health'
+import ScrollToTop from './components/ScrollToTop'
 
 const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   `px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
@@ -11,6 +13,37 @@ const navLinkClass = ({ isActive }: { isActive: boolean }) =>
   }`
 
 export default function App() {
+  const navigate = useNavigate()
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Only trigger if not in input field
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
+
+      switch (e.key) {
+        case '1':
+          navigate('/')
+          break
+        case '2':
+          navigate('/all')
+          break
+        case '3':
+          navigate('/health')
+          break
+        case 'ArrowToTop':
+          if (e.ctrlKey || e.metaKey) {
+            e.preventDefault()
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+          }
+          break
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [navigate])
+
   return (
     <div className="min-h-screen bg-gray-950">
       <header className="sticky top-0 z-50 bg-gray-950/90 backdrop-blur border-b border-gray-800/50">
@@ -32,6 +65,7 @@ export default function App() {
           <Route path="/health" element={<Health />} />
         </Routes>
       </main>
+      <ScrollToTop />
     </div>
   )
 }

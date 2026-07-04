@@ -16,6 +16,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null)
   const [domains, setDomains] = useState<Domain[]>([])
   const [types, setTypes] = useState<ItemType[]>([])
+  const [minScore, setMinScore] = useState(0)
   const [health, setHealth] = useState<any[]>([])
   const [page, setPage] = useState(1)
 
@@ -40,9 +41,10 @@ export default function Home() {
     return data.items.filter(item => {
       if (domains.length > 0 && !item.domain.some(d => domains.includes(d))) return false
       if (types.length > 0 && !types.includes(item.type)) return false
+      if (item.score < minScore) return false
       return true
     })
-  }, [data, domains, types])
+  }, [data, domains, types, minScore])
 
   const totalPages = Math.ceil(filtered.length / PAGE_SIZE)
   const paginatedItems = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
@@ -74,6 +76,8 @@ export default function Home() {
         selectedTypes={types}
         onDomainToggle={toggleDomain}
         onTypeToggle={toggleType}
+        minScore={minScore}
+        onMinScoreChange={setMinScore}
       />
 
       <div className="mt-6 space-y-4">
