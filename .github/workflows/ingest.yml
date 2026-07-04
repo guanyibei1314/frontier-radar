@@ -21,13 +21,27 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
 
-      - name: Install dependencies
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install Python dependencies
         run: pip install -r requirements.txt
 
       - name: Run pipeline
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
         run: cd pipeline && python main.py
+
+      - name: Build frontend
+        run: |
+          cd web
+          npm ci
+          rm -rf public/data
+          cp -r ../data public/data
+          npm run build
 
       - name: Commit data
         run: |
