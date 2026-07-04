@@ -50,3 +50,4 @@ jobs:
           git add data/ pipeline/cache/
           git diff --staged --quiet || git commit -m "chore: update data [$(date -u +%Y-%m-%dT%H:%M)]"
           git push
+# Trigger workflow detection
