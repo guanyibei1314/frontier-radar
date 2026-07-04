@@ -1,0 +1,16 @@
+{
+  "name": "FrontierRadar",
+  "short_name": "FrontierRadar",
+  "description": "前沿热点雷达 - AI / 具身智能 / 无人机",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#030712",
+  "theme_color": "#0ea5e9",
+  "icons": [
+    {
+      "src": "/vite.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
