@@ -1,6 +1,7 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import type { Domain, ItemType, FeedData } from '../types'
 import { fetchAll } from '../lib/data'
+import { getSearchHistory, addToSearchHistory, removeFromSearchHistory, clearSearchHistory } from '../lib/search'
 import FilterBar from '../components/FilterBar'
 import ItemCard from '../components/ItemCard'
 import EmptyState from '../components/EmptyState'
@@ -17,6 +18,9 @@ export default function All() {
   const [types, setTypes] = useState<ItemType[]>([])
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
+  const [showHistory, setShowHistory] = useState(false)
+  const [searchHistory, setSearchHistory] = useState<string[]>([])
+  const searchRef = useRef<HTMLDivElement>(null)
 
   const load = async () => {
     setLoading(true)
@@ -31,7 +35,21 @@ export default function All() {
     }
   }
 
-  useEffect(() => { load() }, [])
+  useEffect(() => {
+    load()
+    setSearchHistory(getSearchHistory())
+  }, [])
+
+  // Close history dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setShowHistory(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
   const filtered = useMemo(() => {
     if (!data) return []
@@ -59,6 +77,26 @@ export default function All() {
     setPage(1)
   }
 
+  const handleSearch = (query: string) => {
+    setSearch(query)
+    setPage(1)
+    if (query.trim()) {
+      addToSearchHistory(query.trim())
+      setSearchHistory(getSearchHistory())
+    }
+  }
+
+  const handleHistoryClick = (query: string) => {
+    setSearch(query)
+    setPage(1)
+    setShowHistory(false)
+  }
+
+  const handleClearHistory = () => {
+    clearSearchHistory()
+    setSearchHistory([])
+  }
+
   if (loading) return <LoadingSkeleton />
   if (error) return <ErrorState message={error} onRetry={load} />
 
@@ -72,14 +110,47 @@ export default function All() {
         </p>
       </div>
 
-      <div className="mb-4">
+      <div className="mb-4 relative" ref={searchRef}>
         <input
           type="text"
           value={search}
-          onChange={e => { setSearch(e.target.value); setPage(1) }}
+          onChange={e => handleSearch(e.target.value)}
+          onFocus={() => setShowHistory(true)}
           placeholder="搜索标题或摘要..."
           className="w-full px-4 py-2.5 bg-gray-900 border border-gray-700/50 rounded-lg text-gray-200 placeholder-gray-600 focus:outline-none focus:border-primary-500/50 focus:ring-1 focus:ring-primary-500/30"
         />
+        {showHistory && searchHistory.length > 0 && (
+          <div className="absolute top-full left-0 right-0 mt-1 bg-gray-900 border border-gray-700 rounded-lg shadow-lg z-10 max-h-60 overflow-y-auto">
+            <div className="flex items-center justify-between px-4 py-2 border-b border-gray-700">
+              <span className="text-xs text-gray-500">搜索历史</span>
+              <button
+                onClick={handleClearHistory}
+                className="text-xs text-gray-500 hover:text-gray-300"
+              >
+                清除
+              </button>
+            </div>
+            {searchHistory.map((query, index) => (
+              <div
+                key={index}
+                className="flex items-center justify-between px-4 py-2 hover:bg-gray-800 cursor-pointer"
+                onClick={() => handleHistoryClick(query)}
+              >
+                <span className="text-sm text-gray-300">{query}</span>
+                <button
+                  onClick={e => {
+                    e.stopPropagation()
+                    removeFromSearchHistory(query)
+                    setSearchHistory(getSearchHistory())
+                  }}
+                  className="text-xs text-gray-500 hover:text-gray-300"
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       <FilterBar
