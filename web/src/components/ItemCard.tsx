@@ -1,4 +1,5 @@
 import { memo, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import type { Item } from '../types'
 import { TYPE_LABELS } from '../types'
 import ScoreBadge from './ScoreBadge'
@@ -13,29 +14,34 @@ interface ItemCardProps {
 }
 
 const ItemCard = memo(function ItemCard({ item }: ItemCardProps) {
+  const navigate = useNavigate()
   const [read, setRead] = useState(() => isRead(item.id))
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault()
     markAsRead(item.id)
     setRead(true)
+    navigate(`/item/${item.id}`)
+  }
+
+  const handleOpenLink = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    markAsRead(item.id)
+    setRead(true)
+    window.open(item.url, '_blank')
   }
 
   return (
-    <article className={`card group ${read ? 'opacity-70' : ''}`}>
+    <article className={`card group cursor-pointer ${read ? 'opacity-70' : ''}`} onClick={handleClick}>
       <div className="flex gap-4">
         <div className="flex-shrink-0 pt-1">
           <ScoreBadge score={item.score} />
         </div>
         <div className="flex-1 min-w-0">
           <h3 className="text-base font-semibold text-gray-100 group-hover:text-primary-300 transition-colors leading-snug">
-            <a
-              href={item.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={handleClick}
-            >
+            <span onClick={handleOpenLink}>
               {item.title_zh}
-            </a>
+            </span>
           </h3>
           {item.title_raw !== item.title_zh && (
             <p className="text-sm text-gray-500 mt-0.5 truncate">{item.title_raw}</p>

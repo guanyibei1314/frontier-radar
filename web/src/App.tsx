@@ -6,6 +6,8 @@ import Health from './pages/Health'
 import Bookmarks from './pages/Bookmarks'
 import Analytics from './pages/Analytics'
 import Digest from './pages/Digest'
+import Trending from './pages/Trending'
+import ItemDetail from './pages/ItemDetail'
 import About from './pages/About'
 import Settings from './pages/Settings'
 import ScrollToTop from './components/ScrollToTop'
@@ -45,12 +47,15 @@ export default function App() {
           navigate('/digest')
           break
         case '6':
-          navigate('/health')
+          navigate('/trending')
           break
         case '7':
-          navigate('/about')
+          navigate('/health')
           break
         case '8':
+          navigate('/about')
+          break
+        case '9':
           navigate('/settings')
           break
         case '?':
@@ -80,6 +85,7 @@ export default function App() {
               <NavLink to="/bookmarks" className={navLinkClass}>收藏</NavLink>
               <NavLink to="/analytics" className={navLinkClass}>分析</NavLink>
               <NavLink to="/digest" className={navLinkClass}>日报</NavLink>
+              <NavLink to="/trending" className={navLinkClass}>热门</NavLink>
               <NavLink to="/health" className={navLinkClass}>健康</NavLink>
               <NavLink to="/about" className={navLinkClass}>关于</NavLink>
               <NavLink to="/settings" className={navLinkClass}>设置</NavLink>
@@ -104,6 +110,8 @@ export default function App() {
           <Route path="/bookmarks" element={<Bookmarks />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/digest" element={<Digest />} />
+          <Route path="/trending" element={<Trending />} />
+          <Route path="/item/:id" element={<ItemDetail />} />
           <Route path="/health" element={<Health />} />
           <Route path="/about" element={<About />} />
           <Route path="/settings" element={<Settings />} />
