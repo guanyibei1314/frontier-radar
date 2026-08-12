@@ -1,5 +1,5 @@
 {
-  "last_run": "2026-08-12T01:52:49.796533+00:00",
+  "last_run": "2026-08-12T04:47:03.581207+00:00",
   "source_health": [
     {
       "name": "arXiv cs.RO",
@@ -53,9 +53,9 @@
   "counts": {
     "fetched": 256,
     "after_prefilter": 221,
-    "after_dedup": 221,
-    "llm_calls": 221,
+    "after_dedup": 194,
+    "llm_calls": 194,
     "feed_count": 0,
-    "all_count": 221
+    "all_count": 194
   }
 }
