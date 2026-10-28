@@ -1,5 +1,5 @@
 {
-  "last_run": "2026-10-28T12:11:49.938161+00:00",
+  "last_run": "2026-10-28T20:06:00.325663+00:00",
   "source_health": [
     {
       "name": "arXiv cs.RO",
@@ -46,16 +46,16 @@
     {
       "name": "sUAS News",
       "ok": true,
-      "count": 0,
+      "count": 10,
       "error": null
     }
   ],
   "counts": {
-    "fetched": 256,
-    "after_prefilter": 224,
-    "after_dedup": 189,
-    "llm_calls": 189,
+    "fetched": 266,
+    "after_prefilter": 234,
+    "after_dedup": 199,
+    "llm_calls": 199,
     "feed_count": 0,
-    "all_count": 189
+    "all_count": 199
   }
 }
