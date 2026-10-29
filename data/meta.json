@@ -1,5 +1,5 @@
 {
-  "last_run": "2026-10-29T00:37:47.187880+00:00",
+  "last_run": "2026-10-29T09:24:58.542152+00:00",
   "source_health": [
     {
       "name": "arXiv cs.RO",
@@ -52,10 +52,10 @@
   ],
   "counts": {
     "fetched": 266,
-    "after_prefilter": 234,
-    "after_dedup": 199,
-    "llm_calls": 199,
+    "after_prefilter": 232,
+    "after_dedup": 197,
+    "llm_calls": 197,
     "feed_count": 0,
-    "all_count": 199
+    "all_count": 197
   }
 }
