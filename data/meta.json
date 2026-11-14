@@ -1,22 +1,22 @@
 {
-  "last_run": "2026-11-14T05:06:08.259724+00:00",
+  "last_run": "2026-11-14T13:01:14.208431+00:00",
   "source_health": [
     {
       "name": "arXiv cs.RO",
       "ok": true,
-      "count": 0,
+      "count": 50,
       "error": null
     },
     {
       "name": "arXiv cs.AI",
       "ok": true,
-      "count": 0,
+      "count": 50,
       "error": null
     },
     {
       "name": "arXiv cs.CL",
       "ok": true,
-      "count": 0,
+      "count": 50,
       "error": null
     },
     {
@@ -51,11 +51,11 @@
     }
   ],
   "counts": {
-    "fetched": 116,
-    "after_prefilter": 84,
-    "after_dedup": 84,
-    "llm_calls": 84,
+    "fetched": 266,
+    "after_prefilter": 233,
+    "after_dedup": 200,
+    "llm_calls": 200,
     "feed_count": 0,
-    "all_count": 84
+    "all_count": 200
   }
 }
